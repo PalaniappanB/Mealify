@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "Mealify",
+    "slug": "mealify",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mealify.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Mealify uses your location to show Mealify Bags near you."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFF8F0"
+      },
+      "package": "com.mealify.app",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Mealify uses your location to show Mealify Bags near you."
+        }
+      ]
+    ]
+  }
+}

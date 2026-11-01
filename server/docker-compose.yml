@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mealify-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mealify
+      POSTGRES_PASSWORD: mealify
+      POSTGRES_DB: mealify
+    ports:
+      - "5432:5432"
+    volumes:
+      - mealify_pgdata:/var/lib/postgresql/data
+
+volumes:
+  mealify_pgdata:

@@ -5,8 +5,11 @@ const { distanceKm } = require('../utils/distance');
 
 const router = express.Router();
 
+const LLM_PROVIDER = process.env.LLM_PROVIDER || 'ollama'; // 'ollama' (local dev) | 'groq' (cloud)
 const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:1b';
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
 
 // Natural-language "find me food" assistant. Fetches currently-available listings,
 // hands a compact summary to a local Ollama model, and asks it to pick the most
@@ -32,7 +35,7 @@ router.post('/search', authRequired('customer'), async (req, res) => {
       distance_km: lat && lng ? distanceKm(Number(lat), Number(lng), l.partner_lat, l.partner_lng) : null
     }));
 
-    const { ids } = await askOllama(message, listings);
+    const { ids } = await askLlm(message, listings);
     const uniqueIds = [...new Set(ids)];
 
     let matched = uniqueIds.map((id) => listings.find((l) => l.id === id)).filter(Boolean);
@@ -103,12 +106,12 @@ function describeMatches(matched) {
   return `${opener} ${names.join(', ')}${more}.`;
 }
 
-async function askOllama(message, listings) {
+function buildPrompt(message, listings) {
   const menu = listings
     .map((l) => `#${l.id} | ${l.title} | ${l.cuisine_type} | ₹${l.discounted_price} | ${l.partner_name}`)
     .join('\n');
 
-  const prompt = `You are a friendly food search assistant for Mealify, a surplus-food marketplace app.
+  return `You are a friendly food search assistant for Mealify, a surplus-food marketplace app.
 Below is the list of currently available food bags, one per line, formatted as:
 #id | title | cuisine | price | restaurant name
 
@@ -122,10 +125,23 @@ Pick only ids from the list above that best match the request. Prioritize in thi
 3. General relevance.
 Never invent an id that isn't in the list. Reply with ONLY a JSON object, no other text, in this exact shape:
 {"ids": [list of matching numeric ids, most relevant first, at most 8]}`;
+}
 
+function parseIds(rawText) {
+  const parsed = JSON.parse(rawText);
+  return Array.isArray(parsed.ids) ? parsed.ids.map(Number).filter(Number.isFinite) : [];
+}
+
+// Dispatches to a local Ollama instance (dev) or Groq's hosted API (production),
+// chosen via LLM_PROVIDER so the same prompt/parsing logic works with either.
+async function askLlm(message, listings) {
+  const prompt = buildPrompt(message, listings);
+  return LLM_PROVIDER === 'groq' ? askGroq(prompt) : askOllama(prompt);
+}
+
+async function askOllama(prompt) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 45000);
-
   try {
     const response = await fetch(`${OLLAMA_URL}/api/generate`, {
       method: 'POST',
@@ -135,9 +151,31 @@ Never invent an id that isn't in the list. Reply with ONLY a JSON object, no oth
     });
     if (!response.ok) throw new Error(`Ollama responded with ${response.status}`);
     const data = await response.json();
-    const parsed = JSON.parse(data.response);
-    const ids = Array.isArray(parsed.ids) ? parsed.ids.map(Number).filter(Number.isFinite) : [];
-    return { ids };
+    return { ids: parseIds(data.response) };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function askGroq(prompt) {
+  if (!GROQ_API_KEY) throw new Error('GROQ_API_KEY is not configured');
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20000);
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${GROQ_API_KEY}` },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' },
+        temperature: 0.2
+      }),
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`Groq responded with ${response.status}: ${await response.text()}`);
+    const data = await response.json();
+    return { ids: parseIds(data.choices[0].message.content) };
   } finally {
     clearTimeout(timeout);
   }

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../context/AuthContext';
 import { requestOtp } from '../../api/auth';
@@ -34,7 +35,6 @@ export default function OtpLoginScreen() {
       alignItems: 'center',
       gap: spacing.xs
     },
-    devBannerIcon: { fontSize: 18 },
     devBannerText: { ...typography.bodyStrong, color: colors.secondaryDark, flex: 1 }
   });
 
@@ -92,7 +92,7 @@ export default function OtpLoginScreen() {
           </Text>
           {devHint ? (
             <View style={styles.devBanner}>
-              <Text style={styles.devBannerIcon}>🧪</Text>
+              <Icon name="flask-outline" size={18} color={colors.secondaryDark} />
               <Text style={styles.devBannerText}>{t('auth.devCodeBanner', { code: devHint })}</Text>
             </View>
           ) : null}

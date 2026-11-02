@@ -6,6 +6,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import LoadingView from '../../components/LoadingView';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fetchOrder } from '../../api/orders';
 import { formatTimeRange } from '../../utils/format';
@@ -22,7 +23,14 @@ export default function OrderConfirmationScreen({ route, navigation }) {
 
   const styles = StyleSheet.create({
     center: { alignItems: 'center', marginTop: spacing.lg },
-    check: { fontSize: 56 },
+    checkWrap: {
+      width: 88,
+      height: 88,
+      borderRadius: radii.pill,
+      backgroundColor: colors.successTint,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
     title: { ...typography.h1, color: colors.text, marginTop: spacing.sm },
     subtitle: { ...typography.body, color: colors.textMuted, marginTop: spacing.xxs },
     codeCard: { alignItems: 'center', marginTop: spacing.xl, paddingVertical: spacing.xl },
@@ -47,7 +55,9 @@ export default function OrderConfirmationScreen({ route, navigation }) {
   return (
     <ScreenContainer style={{ flex: 1 }}>
       <View style={styles.center}>
-        <Text style={styles.check}>🎉</Text>
+        <View style={styles.checkWrap}>
+          <Icon name="checkmark-circle" size={56} color={colors.success} />
+        </View>
         <Text style={styles.title}>{t('confirmation.title')}</Text>
         <Text style={styles.subtitle}>{t('confirmation.subtitle')}</Text>
       </View>

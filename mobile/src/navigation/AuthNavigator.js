@@ -5,6 +5,7 @@ import AuthWelcomeScreen from '../screens/auth/AuthWelcomeScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 import OtpLoginScreen from '../screens/auth/OtpLoginScreen';
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import PartnerLoginScreen from '../screens/auth/PartnerLoginScreen';
 import PartnerSignupScreen from '../screens/auth/PartnerSignupScreen';
 import { useTheme } from '../theme/ThemeProvider';
@@ -28,6 +29,7 @@ export default function AuthNavigator() {
       <Stack.Screen name="Login" component={LoginScreen} options={{ title: t('auth.login') }} />
       <Stack.Screen name="Signup" component={SignupScreen} options={{ title: t('auth.signup') }} />
       <Stack.Screen name="OtpLogin" component={OtpLoginScreen} options={{ title: t('auth.loginWithOtp') }} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: t('auth.forgotPasswordTitle') }} />
       <Stack.Screen name="PartnerLogin" component={PartnerLoginScreen} options={{ title: t('auth.partnerLogin') }} />
       <Stack.Screen name="PartnerSignup" component={PartnerSignupScreen} options={{ title: t('partnerSignup.title') }} />
     </Stack.Navigator>

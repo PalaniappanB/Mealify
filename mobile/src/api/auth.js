@@ -7,6 +7,9 @@ export const verifyOtp = (payload) => client.post('/auth/otp/verify', payload).t
 export const fetchMe = () => client.get('/auth/me').then((r) => r.data.user);
 export const updateMe = (payload) => client.put('/auth/me', payload).then((r) => r.data.user);
 
+export const forgotPassword = (phone) => client.post('/auth/password/forgot', { phone }).then((r) => r.data);
+export const resetPassword = (payload) => client.post('/auth/password/reset', payload).then((r) => r.data);
+
 export const partnerLogin = (payload) => client.post('/partner-auth/login', payload).then((r) => r.data);
 export const partnerSignup = (payload) => client.post('/partner-auth/signup', payload).then((r) => r.data);
 export const fetchPartnerMe = () => client.get('/partner-auth/me').then((r) => r.data.staff);

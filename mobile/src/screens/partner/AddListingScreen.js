@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { createPartnerListing, uploadListingImage } from '../../api/orders';
 import { pickImage } from '../../utils/pickImage';
@@ -42,7 +43,6 @@ export default function AddListingScreen({ navigation }) {
       overflow: 'hidden'
     },
     photo: { width: '100%', height: '100%' },
-    photoIcon: { fontSize: 32, marginBottom: spacing.xxs },
     photoLabel: { ...typography.bodyStrong, color: colors.textMuted }
   });
 
@@ -111,7 +111,7 @@ export default function AddListingScreen({ navigation }) {
           <Image source={{ uri: image.uri }} style={styles.photo} />
         ) : (
           <View style={{ alignItems: 'center' }}>
-            <Text style={styles.photoIcon}>📷</Text>
+            <Icon name="camera-outline" size={30} color={colors.textMuted} />
             <Text style={styles.photoLabel}>{t('partnerDashboard.addPhoto')}</Text>
           </View>
         )}

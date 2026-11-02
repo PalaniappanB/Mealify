@@ -1,15 +1,20 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
 import PartnerListingsScreen from '../screens/partner/PartnerListingsScreen';
 import PartnerOrdersScreen from '../screens/partner/PartnerOrdersScreen';
 import PartnerReportsScreen from '../screens/partner/PartnerReportsScreen';
 import PartnerProfileScreen from '../screens/partner/PartnerProfileScreen';
+import Icon from '../components/Icon';
 import { useTheme } from '../theme/ThemeProvider';
 
 const Tab = createBottomTabNavigator();
-const ICONS = { PartnerListings: '📦', PartnerOrders: '🧾', PartnerReports: '📊', PartnerProfileTab: '👤' };
+const ICONS = {
+  PartnerListings: 'bag-handle',
+  PartnerOrders: 'receipt',
+  PartnerReports: 'stats-chart',
+  PartnerProfileTab: 'person'
+};
 
 export default function PartnerTabNavigator() {
   const { t } = useTranslation();
@@ -22,7 +27,9 @@ export default function PartnerTabNavigator() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textFaint,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
-        tabBarIcon: () => <Text style={{ fontSize: 20 }}>{ICONS[route.name]}</Text>
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon name={focused ? ICONS[route.name] : `${ICONS[route.name]}-outline`} size={size} color={color} />
+        )
       })}
     >
       <Tab.Screen name="PartnerListings" component={PartnerListingsScreen} options={{ tabBarLabel: t('nav.listings') }} />

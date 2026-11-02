@@ -5,6 +5,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import EmptyState from '../../components/EmptyState';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useCart } from '../../context/CartContext';
 import { formatRupees } from '../../utils/format';
@@ -31,7 +32,8 @@ export default function CartScreen({ navigation }) {
       justifyContent: 'center'
     },
     qtyText: { ...typography.bodyStrong, color: colors.text },
-    removeLink: { ...typography.tiny, color: colors.danger, marginTop: spacing.xs },
+    removeLink: { flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: spacing.xs },
+    removeLinkText: { ...typography.tiny, color: colors.danger },
     footer: {
       borderTopWidth: 1,
       borderTopColor: colors.border,
@@ -47,7 +49,7 @@ export default function CartScreen({ navigation }) {
     return (
       <ScreenContainer style={{ flex: 1 }}>
         <Text style={styles.header}>{t('cart.title')}</Text>
-        <EmptyState title={t('cart.empty')} subtitle={t('cart.emptySubtitle')} icon="🛒" />
+        <EmptyState title={t('cart.empty')} subtitle={t('cart.emptySubtitle')} icon="cart-outline" />
         <Button title={t('cart.browse')} variant="outline" onPress={() => navigation.navigate('Home')} />
       </ScreenContainer>
     );
@@ -66,13 +68,14 @@ export default function CartScreen({ navigation }) {
             <View style={styles.itemInfo}>
               <Text style={styles.itemTitle} numberOfLines={1}>{item.title}</Text>
               <Text style={styles.itemPrice}>{formatRupees(item.discountedPrice)}</Text>
-              <Pressable onPress={() => removeItem(item.listingId)}>
-                <Text style={styles.removeLink}>{t('cart.remove')}</Text>
+              <Pressable style={styles.removeLink} onPress={() => removeItem(item.listingId)}>
+                <Icon name="trash-outline" size={12} color={colors.danger} />
+                <Text style={styles.removeLinkText}>{t('cart.remove')}</Text>
               </Pressable>
             </View>
             <View style={styles.qtyRow}>
               <Pressable style={styles.qtyBtn} onPress={() => setQuantity(item.listingId, item.quantity - 1)}>
-                <Text style={styles.qtyText}>–</Text>
+                <Icon name="remove" size={16} color={colors.text} />
               </Pressable>
               <Text style={styles.qtyText}>{item.quantity}</Text>
               <Pressable
@@ -80,7 +83,7 @@ export default function CartScreen({ navigation }) {
                 onPress={() => setQuantity(item.listingId, item.quantity + 1)}
                 disabled={item.quantity >= item.maxQuantity}
               >
-                <Text style={styles.qtyText}>+</Text>
+                <Icon name="add" size={16} color={colors.text} />
               </Pressable>
             </View>
           </Card>

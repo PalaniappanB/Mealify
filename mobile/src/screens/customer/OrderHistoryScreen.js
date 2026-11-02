@@ -94,7 +94,7 @@ export default function OrderHistoryScreen() {
             ) : null}
           </Card>
         )}
-        ListEmptyComponent={<EmptyState title={t('orders.empty')} icon="🧾" />}
+        ListEmptyComponent={<EmptyState title={t('orders.empty')} icon="receipt-outline" />}
       />
     </ScreenContainer>
   );

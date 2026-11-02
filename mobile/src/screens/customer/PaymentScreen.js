@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { mockCharge } from '../../api/orders';
 import { formatRupees } from '../../utils/format';
@@ -21,7 +22,15 @@ export default function PaymentScreen({ route, navigation }) {
   const styles = StyleSheet.create({
     title: { ...typography.h1, color: colors.text, marginBottom: spacing.md },
     card: { marginBottom: spacing.lg, alignItems: 'center' },
-    cardIcon: { fontSize: 36, marginBottom: spacing.sm },
+    cardIconWrap: {
+      width: 64,
+      height: 64,
+      borderRadius: radii.pill,
+      backgroundColor: colors.primaryTint,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.sm
+    },
     methodLabel: { ...typography.h3, color: colors.text },
     cardNumber: { ...typography.body, color: colors.textMuted, marginTop: spacing.xxs, letterSpacing: 2 },
     notice: {
@@ -54,7 +63,9 @@ export default function PaymentScreen({ route, navigation }) {
       <Text style={styles.title}>{t('payment.title')}</Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <Card style={styles.card}>
-        <Text style={styles.cardIcon}>💳</Text>
+        <View style={styles.cardIconWrap}>
+          <Icon name="card" size={28} color={colors.primary} />
+        </View>
         <Text style={styles.methodLabel}>{t('payment.mockCard')}</Text>
         <Text style={styles.cardNumber}>{t('payment.cardNumber')}</Text>
       </Card>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
@@ -39,8 +39,10 @@ export default function ProfileScreen() {
       backgroundColor: colors.primaryTint,
       alignItems: 'center',
       justifyContent: 'center',
-      marginRight: spacing.sm
+      marginRight: spacing.sm,
+      overflow: 'hidden'
     },
+    avatarImage: { width: '100%', height: '100%' },
     avatarText: { ...typography.h2, color: colors.primary },
     name: { ...typography.h2, color: colors.text },
     meta: { ...typography.caption, color: colors.textMuted },
@@ -100,7 +102,11 @@ export default function ProfileScreen() {
       ) : (
         <Card style={styles.avatarCard}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{user?.name?.[0]?.toUpperCase() || '?'}</Text>
+            {user?.avatar_url ? (
+              <Image source={{ uri: user.avatar_url }} style={styles.avatarImage} />
+            ) : (
+              <Text style={styles.avatarText}>{user?.name?.[0]?.toUpperCase() || '?'}</Text>
+            )}
           </View>
           <View style={{ flex: 1 }}>
             <View style={styles.editHeaderRow}>

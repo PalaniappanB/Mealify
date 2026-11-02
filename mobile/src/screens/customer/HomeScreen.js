@@ -8,6 +8,7 @@ import EmptyState from '../../components/EmptyState';
 import LoadingView from '../../components/LoadingView';
 import CartFloatingBar from '../../components/CartFloatingBar';
 import { LogoMark } from '../../components/Logo';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../context/AuthContext';
 import { useLocation } from '../../context/LocationContext';
@@ -108,8 +109,6 @@ export default function HomeScreen({ navigation }) {
       alignItems: 'center',
       justifyContent: 'center'
     },
-    aiButtonText: { fontSize: 20 },
-    searchIcon: { fontSize: 16, marginRight: spacing.xs },
     searchInput: { flex: 1, ...typography.body, color: colors.text },
     sectionTitle: { ...typography.h2, color: colors.text, marginBottom: spacing.sm, marginTop: spacing.md },
     chipsRow: { paddingVertical: spacing.xs },
@@ -141,9 +140,9 @@ export default function HomeScreen({ navigation }) {
                 <LogoMark size={22} />
                 <Text style={styles.brandName}>Mealify</Text>
                 <Pressable style={styles.locationPill} onPress={() => navigation.navigate('LocationPicker')}>
-                  <Text>📍</Text>
+                  <Icon name="location" size={13} color={colors.primary} />
                   <Text style={styles.locationText} numberOfLines={1}>{location.label}</Text>
-                  <Text style={{ color: colors.textFaint, fontSize: 10 }}>▾</Text>
+                  <Icon name="chevron-down" size={12} color={colors.textFaint} />
                 </Pressable>
               </View>
               <Text style={styles.greeting}>{t('home.greeting')}</Text>
@@ -153,7 +152,7 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.searchWrap}>
               <View style={styles.searchRow}>
                 <View style={styles.searchBox}>
-                  <Text style={styles.searchIcon}>🔍</Text>
+                  <Icon name="search" size={18} color={colors.textFaint} style={{ marginRight: spacing.xs }} />
                   <TextInput
                     style={styles.searchInput}
                     value={query}
@@ -166,12 +165,12 @@ export default function HomeScreen({ navigation }) {
                   />
                   {query.length > 0 && (
                     <Pressable onPress={() => setQuery('')}>
-                      <Text style={{ color: colors.textFaint, fontSize: 16 }}>✕</Text>
+                      <Icon name="close-circle" size={18} color={colors.textFaint} />
                     </Pressable>
                   )}
                 </View>
                 <Pressable style={styles.aiButton} onPress={() => navigation.navigate('AiSearch')}>
-                  <Text style={styles.aiButtonText}>✨</Text>
+                  <Icon name="sparkles" size={20} color={colors.text} />
                 </Pressable>
               </View>
             </View>
@@ -218,7 +217,7 @@ export default function HomeScreen({ navigation }) {
         )}
         ListEmptyComponent={
           error ? (
-            <EmptyState icon="⚠️" title={t('common.error')} subtitle={error} />
+            <EmptyState icon="alert-circle-outline" title={t('common.error')} subtitle={error} />
           ) : (
             <EmptyState title={query ? t('home.noResults') : t('home.empty')} />
           )

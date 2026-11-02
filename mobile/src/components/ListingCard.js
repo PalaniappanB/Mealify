@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Card from './Card';
 import Badge from './Badge';
+import Icon from './Icon';
 import { useTheme } from '../theme/ThemeProvider';
 import { useCart } from '../context/CartContext';
 import { formatRupees, percentOff, formatTimeRange } from '../utils/format';
@@ -29,7 +30,6 @@ export default function ListingCard({ listing, partnerInfo, onPress, showPartner
       overflow: 'hidden'
     },
     thumbImage: { width: '100%', height: '100%' },
-    thumbEmoji: { fontSize: 30 },
     body: { flex: 1, justifyContent: 'space-between' },
     title: { ...typography.h3, color: colors.text },
     partner: { ...typography.caption, color: colors.textMuted, marginTop: 1 },
@@ -38,6 +38,7 @@ export default function ListingCard({ listing, partnerInfo, onPress, showPartner
     price: { ...typography.h2, color: colors.primary, marginRight: spacing.xs },
     originalPrice: { ...typography.caption, color: colors.textFaint, textDecorationLine: 'line-through' },
     footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.xs },
+    pickupRow: { flexDirection: 'row', alignItems: 'center', gap: 3 },
     pickup: { ...typography.tiny, color: colors.textMuted },
     addBtn: {
       backgroundColor: soldOut ? colors.surfaceAlt : colors.primary,
@@ -54,7 +55,6 @@ export default function ListingCard({ listing, partnerInfo, onPress, showPartner
       paddingHorizontal: 4
     },
     stepperBtn: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center' },
-    stepperBtnText: { ...typography.bodyStrong, color: colors.onPrimary },
     stepperQty: { ...typography.bodyStrong, color: colors.onPrimary, minWidth: 18, textAlign: 'center' }
   });
 
@@ -66,7 +66,7 @@ export default function ListingCard({ listing, partnerInfo, onPress, showPartner
             {listing.image_url ? (
               <Image source={{ uri: listing.image_url }} style={styles.thumbImage} />
             ) : (
-              <Text style={styles.thumbEmoji}>🥡</Text>
+              <Icon name="bag-handle-outline" size={28} color={colors.textFaint} />
             )}
           </View>
           <View style={styles.body}>
@@ -86,7 +86,10 @@ export default function ListingCard({ listing, partnerInfo, onPress, showPartner
               <Text style={styles.originalPrice}>{formatRupees(listing.original_price)}</Text>
             </View>
             <View style={styles.footerRow}>
-              <Text style={styles.pickup}>{formatTimeRange(listing.pickup_window_start, listing.pickup_window_end)}</Text>
+              <View style={styles.pickupRow}>
+                <Icon name="time-outline" size={12} color={colors.textMuted} />
+                <Text style={styles.pickup}>{formatTimeRange(listing.pickup_window_start, listing.pickup_window_end)}</Text>
+              </View>
               {soldOut ? (
                 <View style={styles.addBtn}>
                   <Text style={styles.addBtnText}>{t('listing.soldOut')}</Text>
@@ -94,7 +97,7 @@ export default function ListingCard({ listing, partnerInfo, onPress, showPartner
               ) : qtyInCart > 0 ? (
                 <View style={styles.stepper}>
                   <Pressable style={styles.stepperBtn} onPress={() => setQuantity(listing.id, qtyInCart - 1)}>
-                    <Text style={styles.stepperBtnText}>–</Text>
+                    <Icon name="remove" size={16} color={colors.onPrimary} />
                   </Pressable>
                   <Text style={styles.stepperQty}>{qtyInCart}</Text>
                   <Pressable
@@ -102,7 +105,7 @@ export default function ListingCard({ listing, partnerInfo, onPress, showPartner
                     onPress={() => setQuantity(listing.id, qtyInCart + 1)}
                     disabled={qtyInCart >= listing.quantity_available}
                   >
-                    <Text style={styles.stepperBtnText}>+</Text>
+                    <Icon name="add" size={16} color={colors.onPrimary} />
                   </Pressable>
                 </View>
               ) : (

@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, View, Text, StyleSheet, Pressable } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import Button from './Button';
+import Icon from './Icon';
 
 export default function ConfirmModal({ visible, title, message, confirmLabel, cancelLabel, destructive, onConfirm, onCancel }) {
   const { colors, spacing, radii, typography, shadows } = useTheme();
@@ -22,7 +23,15 @@ export default function ConfirmModal({ visible, title, message, confirmLabel, ca
       padding: spacing.lg,
       ...shadows.card
     },
-    icon: { fontSize: 32, marginBottom: spacing.sm },
+    iconWrap: {
+      width: 52,
+      height: 52,
+      borderRadius: radii.pill,
+      backgroundColor: destructive ? colors.dangerTint : colors.secondaryTint,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.sm
+    },
     title: { ...typography.h2, color: colors.text, marginBottom: spacing.xs },
     message: { ...typography.body, color: colors.textMuted, marginBottom: spacing.lg },
     actions: { flexDirection: 'row', gap: spacing.sm }
@@ -32,7 +41,9 @@ export default function ConfirmModal({ visible, title, message, confirmLabel, ca
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <Pressable style={styles.backdrop} onPress={onCancel}>
         <Pressable style={styles.card} onPress={(e) => e.stopPropagation()}>
-          <Text style={styles.icon}>{destructive ? '⚠️' : '🤔'}</Text>
+          <View style={styles.iconWrap}>
+            <Icon name={destructive ? 'warning' : 'help-circle'} size={26} color={destructive ? colors.danger : colors.secondaryDark} />
+          </View>
           {title ? <Text style={styles.title}>{title}</Text> : null}
           {message ? <Text style={styles.message}>{message}</Text> : null}
           <View style={styles.actions}>

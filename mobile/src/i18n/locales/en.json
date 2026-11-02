@@ -71,7 +71,12 @@
     "errorPasswordTooShort": "Password must be at least 6 characters",
     "errorPhoneRequired": "Enter your phone number",
     "errorCodeRequired": "Enter the code we sent you",
-    "devCodeBanner": "Demo mode — no real SMS is sent. Your code is {{code}} (auto-filled below)."
+    "devCodeBanner": "Demo mode — no real SMS is sent. Your code is {{code}} (auto-filled below).",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset your password",
+    "forgotPasswordSubtitle": "We'll text a verification code to your phone number.",
+    "newPassword": "New password",
+    "resetPassword": "Reset password"
   },
   "home": {
     "greeting": "Hungry nearby?",
@@ -130,7 +135,12 @@
     "intro": "Tell me what you're craving — e.g. \"something spicy under 100 rupees\" — and I'll find nearby bags for you.",
     "placeholder": "What are you craving?",
     "thinking": "Thinking...",
-    "error": "Couldn't reach the search assistant. Try again in a moment."
+    "error": "Couldn't reach the search assistant. Try again in a moment.",
+    "chipBudget": "Under ₹100",
+    "chipSpicy": "Spicy",
+    "chipBreakfast": "Breakfast",
+    "chipSweet": "Something sweet",
+    "chipHealthy": "Healthy"
   },
   "listing": {
     "off": "{{percent}}% OFF",

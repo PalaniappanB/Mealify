@@ -1,13 +1,22 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Platform, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Platform, TextInput, Pressable, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ListingCard from '../../components/ListingCard';
 import LoadingView from '../../components/LoadingView';
 import { LogoMark } from '../../components/Logo';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { searchWithAi } from '../../api/chat';
 import { useLocation } from '../../context/LocationContext';
+
+const SUGGESTIONS = [
+  { icon: 'pricetag-outline', labelKey: 'aiSearch.chipBudget', query: 'something good under 100 rupees' },
+  { icon: 'flame-outline', labelKey: 'aiSearch.chipSpicy', query: 'something spicy' },
+  { icon: 'sunny-outline', labelKey: 'aiSearch.chipBreakfast', query: 'good for breakfast' },
+  { icon: 'ice-cream-outline', labelKey: 'aiSearch.chipSweet', query: 'something sweet' },
+  { icon: 'nutrition-outline', labelKey: 'aiSearch.chipHealthy', query: 'something healthy' }
+];
 
 export default function AiSearchScreen({ navigation }) {
   const { t } = useTranslation();
@@ -21,8 +30,7 @@ export default function AiSearchScreen({ navigation }) {
   ]);
   const [loading, setLoading] = useState(false);
 
-  const send = async () => {
-    const text = input.trim();
+  const runSearch = async (text) => {
     if (!text || loading) return;
     setInput('');
     const userMsg = { id: `u-${Date.now()}`, role: 'user', text };
@@ -38,6 +46,9 @@ export default function AiSearchScreen({ navigation }) {
       setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
     }
   };
+
+  const send = () => runSearch(input.trim());
+  const sendSuggestion = (query) => runSearch(query);
 
   const styles = StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.background },
@@ -75,6 +86,20 @@ export default function AiSearchScreen({ navigation }) {
     },
     assistantText: { ...typography.body, color: colors.text },
     resultsWrap: { marginTop: spacing.sm, gap: spacing.xs, paddingLeft: 38 },
+    suggestionsRow: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
+    suggestionChip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+      backgroundColor: colors.surface,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: radii.pill,
+      paddingVertical: 7,
+      paddingHorizontal: 12,
+      marginRight: spacing.xs
+    },
+    suggestionText: { ...typography.caption, color: colors.text },
     inputBar: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -103,8 +128,7 @@ export default function AiSearchScreen({ navigation }) {
       alignItems: 'center',
       justifyContent: 'center',
       ...shadows.raised
-    },
-    sendIcon: { fontSize: 18, color: colors.onPrimary }
+    }
   });
 
   return (
@@ -147,6 +171,14 @@ export default function AiSearchScreen({ navigation }) {
           )}
           ListFooterComponent={loading ? <LoadingView label={t('aiSearch.thinking')} /> : null}
         />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestionsRow}>
+          {SUGGESTIONS.map((s) => (
+            <Pressable key={s.labelKey} style={styles.suggestionChip} onPress={() => sendSuggestion(s.query)} disabled={loading}>
+              <Icon name={s.icon} size={14} color={colors.primary} />
+              <Text style={styles.suggestionText}>{t(s.labelKey)}</Text>
+            </Pressable>
+          ))}
+        </ScrollView>
         <View style={styles.inputBar}>
           <TextInput
             style={styles.input}
@@ -160,7 +192,7 @@ export default function AiSearchScreen({ navigation }) {
             multiline={false}
           />
           <Pressable style={styles.sendBtn} onPress={send} disabled={loading}>
-            <Text style={styles.sendIcon}>➤</Text>
+            <Icon name="send" size={18} color={colors.onPrimary} />
           </Pressable>
         </View>
       </KeyboardAvoidingView>

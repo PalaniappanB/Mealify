@@ -8,6 +8,7 @@ import Badge from '../../components/Badge';
 import Button from '../../components/Button';
 import EmptyState from '../../components/EmptyState';
 import LoadingView from '../../components/LoadingView';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useConfirm } from '../../context/ConfirmContext';
 import { fetchPartnerListings, updatePartnerListing, deletePartnerListing, uploadListingImage } from '../../api/orders';
@@ -85,7 +86,6 @@ export default function PartnerListingsScreen({ navigation }) {
       overflow: 'hidden'
     },
     thumbImage: { width: '100%', height: '100%' },
-    thumbIcon: { fontSize: 22 },
     thumbLabel: { ...typography.tiny, color: colors.primary, marginTop: 2 },
     infoRow: { flexDirection: 'row', justifyContent: 'space-between', flex: 1 },
     listingTitle: { ...typography.h3, color: colors.text },
@@ -112,7 +112,7 @@ export default function PartnerListingsScreen({ navigation }) {
                 {item.image_url ? (
                   <Image source={{ uri: item.image_url }} style={styles.thumbImage} />
                 ) : (
-                  <Text style={styles.thumbIcon}>📷</Text>
+                  <Icon name="camera-outline" size={22} color={colors.textFaint} />
                 )}
               </Pressable>
               <View style={styles.infoRow}>

@@ -95,7 +95,10 @@ const CUSTOMERS = [
   { name: 'Priya Nair', email: 'priya.nair@example.com', phone: '9820011124', preferred_language: 'hi' },
   { name: 'Karthik Subramanian', email: 'karthik.s@example.com', phone: '9820011125', preferred_language: 'en' },
   { name: 'Simran Kaur', email: 'simran.kaur@example.com', phone: '9820011126', preferred_language: 'hi' }
-];
+].map((c) => ({
+  ...c,
+  avatar_url: `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(c.name)}&backgroundColor=f2dee3,f7efd8,fbf8f6`
+}));
 
 const DEMO_PASSWORD = 'password123';
 const PARTNER_PASSWORD = 'partner123';
@@ -113,9 +116,9 @@ async function seed() {
   const customerIds = [];
   for (const c of CUSTOMERS) {
     const result = await pool.query(
-      `INSERT INTO users (name, email, phone, password_hash, preferred_language)
-       VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-      [c.name, c.email, c.phone, customerPasswordHash, c.preferred_language]
+      `INSERT INTO users (name, email, phone, password_hash, preferred_language, avatar_url)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+      [c.name, c.email, c.phone, customerPasswordHash, c.preferred_language, c.avatar_url]
     );
     customerIds.push(result.rows[0].id);
   }

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
 import Button from '../../components/Button';
 import { LogoMark } from '../../components/Logo';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 
 export default function AuthWelcomeScreen({ navigation }) {
@@ -18,7 +19,7 @@ export default function AuthWelcomeScreen({ navigation }) {
     linkRow: { flexDirection: 'row', justifyContent: 'center', marginTop: spacing.md, gap: 6 },
     link: { ...typography.bodyStrong, color: colors.primary },
     linkText: { ...typography.body, color: colors.textMuted },
-    partnerLink: { alignItems: 'center', marginTop: spacing.lg }
+    partnerLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: spacing.lg, gap: 4 }
   });
 
   return (
@@ -37,7 +38,8 @@ export default function AuthWelcomeScreen({ navigation }) {
           <Text style={styles.link} onPress={() => navigation.navigate('Signup')}>{t('auth.signup')}</Text>
         </View>
         <View style={styles.partnerLink}>
-          <Text style={styles.link} onPress={() => navigation.navigate('PartnerLogin')}>{t('auth.partnerLogin')} →</Text>
+          <Text style={styles.link} onPress={() => navigation.navigate('PartnerLogin')}>{t('auth.partnerLogin')}</Text>
+          <Icon name="arrow-forward" size={14} color={colors.primary} />
         </View>
       </View>
     </ScreenContainer>

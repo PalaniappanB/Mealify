@@ -73,6 +73,14 @@ export function AuthProvider({ children }) {
     return otpUser;
   };
 
+  const resetPasswordLogin = async (payload) => {
+    const { token, user: resetUser } = await authApi.resetPassword(payload);
+    await persistSession(token, 'customer');
+    setUser(resetUser);
+    setRole('customer');
+    return resetUser;
+  };
+
   const loginPartner = async (payload) => {
     const { token, staff: loggedInStaff } = await authApi.partnerLogin(payload);
     await persistSession(token, 'partner_staff');
@@ -120,6 +128,7 @@ export function AuthProvider({ children }) {
       loginCustomer,
       signupCustomer,
       verifyOtpLogin,
+      resetPasswordLogin,
       loginPartner,
       signupPartner,
       updateLanguage,

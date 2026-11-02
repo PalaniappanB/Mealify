@@ -1,17 +1,22 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
 import HomeScreen from '../screens/customer/HomeScreen';
 import CartScreen from '../screens/customer/CartScreen';
 import OrderHistoryScreen from '../screens/customer/OrderHistoryScreen';
 import ProfileScreen from '../screens/customer/ProfileScreen';
+import Icon from '../components/Icon';
 import { useTheme } from '../theme/ThemeProvider';
 import { useCart } from '../context/CartContext';
 
 const Tab = createBottomTabNavigator();
 
-const ICONS = { Home: '🏠', CartTab: '🛒', OrdersTab: '🧾', ProfileTab: '👤' };
+const ICONS = {
+  Home: 'home',
+  CartTab: 'cart',
+  OrdersTab: 'receipt',
+  ProfileTab: 'person'
+};
 
 export default function CustomerTabNavigator() {
   const { t } = useTranslation();
@@ -25,7 +30,9 @@ export default function CustomerTabNavigator() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textFaint,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
-        tabBarIcon: () => <Text style={{ fontSize: 20 }}>{ICONS[route.name]}</Text>,
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon name={focused ? ICONS[route.name] : `${ICONS[route.name]}-outline`} size={size} color={color} />
+        ),
         tabBarBadge: route.name === 'CartTab' && totalItems > 0 ? totalItems : undefined
       })}
     >

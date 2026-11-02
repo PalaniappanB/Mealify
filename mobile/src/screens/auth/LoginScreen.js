@@ -60,6 +60,12 @@ export default function LoginScreen({ navigation }) {
         placeholder="••••••••"
       />
       <Button title={t('auth.login')} onPress={submit} loading={loading} style={{ marginTop: spacing.sm }} />
+      <Text
+        style={[styles.link, { textAlign: 'center', marginTop: spacing.md }]}
+        onPress={() => navigation.navigate('ForgotPassword')}
+      >
+        {t('auth.forgotPassword')}
+      </Text>
       <View style={styles.linkRow}>
         <Text style={styles.linkText}>{t('auth.noAccount')}</Text>
         <Text style={styles.link} onPress={() => navigation.navigate('Signup')}>{t('auth.signup')}</Text>

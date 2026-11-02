@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Card from './Card';
 import Badge from './Badge';
+import Icon from './Icon';
 import { useTheme } from '../theme/ThemeProvider';
 import { formatRupees } from '../utils/format';
 
@@ -22,10 +23,10 @@ export default function PartnerCard({ partner, onPress }) {
       overflow: 'hidden'
     },
     logoImage: { width: '100%', height: '100%' },
-    logoText: { fontSize: 26 },
     name: { ...typography.h3, color: colors.text },
     cuisine: { ...typography.caption, color: colors.textMuted, marginTop: 1 },
-    footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.xs }
+    footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.xs },
+    distanceRow: { flexDirection: 'row', alignItems: 'center', gap: 2 }
   });
 
   return (
@@ -35,7 +36,7 @@ export default function PartnerCard({ partner, onPress }) {
           {partner.logo_url ? (
             <Image source={{ uri: partner.logo_url }} style={styles.logoImage} />
           ) : (
-            <Text style={styles.logoText}>🍴</Text>
+            <Icon name="restaurant-outline" size={24} color={colors.secondaryDark} />
           )}
         </View>
         <Text style={styles.name} numberOfLines={1}>{partner.name}</Text>
@@ -47,7 +48,10 @@ export default function PartnerCard({ partner, onPress }) {
             <View />
           )}
           {partner.distance_km != null ? (
-            <Text style={typography.tiny}>{t('common.kmAway', { distance: partner.distance_km })}</Text>
+            <View style={styles.distanceRow}>
+              <Icon name="location-outline" size={11} color={colors.textFaint} />
+              <Text style={typography.tiny}>{t('common.kmAway', { distance: partner.distance_km })}</Text>
+            </View>
           ) : null}
         </View>
       </Card>

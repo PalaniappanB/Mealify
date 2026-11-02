@@ -3,13 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Path, Rect, Circle } from 'react-native-svg';
 import { useTheme } from '../theme/ThemeProvider';
 
-// Mealify's mark: a rescued takeout bag with a folded turmeric top and a small
+// Mealify's mark: a rescued takeout bag with a folded gold top and a small
 // "spark" accent standing in for the good food inside — deliberately not the
 // leaf/eco iconography most surplus-food apps use.
 export function LogoMark({ size = 64, onPrimary = false }) {
   const { colors } = useTheme();
   // On a colored (primary) background the bag body switches to cream so it
-  // doesn't disappear into a same-color backdrop; the fold/spark stay turmeric.
+  // doesn't disappear into a same-color backdrop; the fold/spark stay gold.
   const bagColor = onPrimary ? colors.onPrimary : colors.primary;
   const foldColor = colors.secondary;
   const foldShade = onPrimary ? 'rgba(255,255,255,0.55)' : colors.secondaryTint;

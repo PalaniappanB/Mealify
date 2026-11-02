@@ -2,38 +2,39 @@
 // Every screen/component should read colors, spacing, radii, type and shadows from here
 // via the `useTheme()` hook — never inline hex codes or magic numbers in a screen.
 //
-// Style direction: soft & minimal — muted (not saturated) terracotta/turmeric used
-// as accents against generous cream/white space, restrained type weights, and
+// Style direction: soft & minimal — a deep wine/burgundy primary with a muted
+// gold accent against generous cream/white space, restrained type weights, and
 // diffuse low-opacity shadows instead of hard borders or bold color blocks.
+// (Moved off the earlier terracotta/turmeric — too orange — per design feedback.)
 
 const palette = {
-  terracotta: '#C97A5C',
-  terracottaDark: '#A85A3F',
-  terracottaTint: '#F3E1D6',
-  turmeric: '#E0B268',
-  turmericDark: '#B98A3E',
-  turmericTint: '#FAF0DD',
-  ink: '#3A2E28',
-  inkSoft: '#7A6E66',
-  inkFaint: '#AEA299',
-  cream: '#FBF7F2',
+  wine: '#7A2E3F',
+  wineDark: '#5A1F2E',
+  wineTint: '#F2DEE3',
+  gold: '#C9A646',
+  goldDark: '#A3832E',
+  goldTint: '#F7EFD8',
+  ink: '#352B2E',
+  inkSoft: '#73666A',
+  inkFaint: '#A99DA0',
+  cream: '#FBF8F6',
   card: '#FFFFFF',
-  sand: '#F3ECE3',
-  border: '#EFE6DC',
-  success: '#5A9271',
-  successTint: '#E4F0E8',
-  danger: '#C0574A',
-  dangerTint: '#F8E5E2',
-  overlay: 'rgba(58, 46, 40, 0.5)'
+  sand: '#F2EAE8',
+  border: '#EBE1DF',
+  success: '#4F8F6E',
+  successTint: '#E1F0E7',
+  danger: '#B8544A',
+  dangerTint: '#F6E1DE',
+  overlay: 'rgba(53, 43, 46, 0.5)'
 };
 
 export const colors = {
-  primary: palette.terracotta,
-  primaryDark: palette.terracottaDark,
-  primaryTint: palette.terracottaTint,
-  secondary: palette.turmeric,
-  secondaryDark: palette.turmericDark,
-  secondaryTint: palette.turmericTint,
+  primary: palette.wine,
+  primaryDark: palette.wineDark,
+  primaryTint: palette.wineTint,
+  secondary: palette.gold,
+  secondaryDark: palette.goldDark,
+  secondaryTint: palette.goldTint,
   background: palette.cream,
   surface: palette.card,
   surfaceAlt: palette.sand,

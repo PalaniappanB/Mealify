@@ -5,6 +5,7 @@ import * as Location from 'expo-location';
 import ScreenContainer from '../../components/ScreenContainer';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../context/AuthContext';
 
@@ -108,7 +109,7 @@ export default function PartnerSignupScreen({ navigation }) {
       <Input label={t('partnerSignup.city')} value={form.city} onChangeText={update('city')} placeholder="Mumbai" />
 
       <View style={styles.locationBox}>
-        <Text>📍</Text>
+        <Icon name="location" size={16} color={coords ? colors.success : colors.textMuted} />
         <Text style={styles.locationText}>
           {coords ? t('partnerSignup.locationCaptured') : t('partnerSignup.locationNeeded')}
         </Text>

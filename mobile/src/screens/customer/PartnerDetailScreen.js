@@ -6,6 +6,7 @@ import ListingCard from '../../components/ListingCard';
 import EmptyState from '../../components/EmptyState';
 import LoadingView from '../../components/LoadingView';
 import CartFloatingBar from '../../components/CartFloatingBar';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { fetchPartner } from '../../api/catalog';
 import { useLocation } from '../../context/LocationContext';
@@ -56,7 +57,6 @@ export default function PartnerDetailScreen({ route, navigation }) {
       overflow: 'hidden'
     },
     heroLogoImage: { width: '100%', height: '100%' },
-    heroLogoEmoji: { fontSize: 24 },
     heroTitle: { ...typography.h1, color: colors.text },
     heroMeta: { ...typography.body, color: colors.textMuted, marginTop: 2 },
     heroAddress: { ...typography.caption, color: colors.textFaint, marginTop: 2 },
@@ -65,7 +65,7 @@ export default function PartnerDetailScreen({ route, navigation }) {
   });
 
   if (loading) return <LoadingView label={t('common.loading')} />;
-  if (error || !partner) return <EmptyState icon="⚠️" title={t('common.error')} subtitle={error} />;
+  if (error || !partner) return <EmptyState icon="alert-circle-outline" title={t('common.error')} subtitle={error} />;
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
@@ -80,7 +80,7 @@ export default function PartnerDetailScreen({ route, navigation }) {
                 {partner.logo_url ? (
                   <Image source={{ uri: partner.logo_url }} style={styles.heroLogoImage} />
                 ) : (
-                  <Text style={styles.heroLogoEmoji}>🍴</Text>
+                  <Icon name="restaurant-outline" size={24} color={colors.textFaint} />
                 )}
               </View>
               <View style={{ flex: 1 }}>

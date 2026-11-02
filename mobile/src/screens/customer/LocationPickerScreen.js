@@ -5,6 +5,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useLocation } from '../../context/LocationContext';
 
@@ -25,10 +26,19 @@ export default function LocationPickerScreen({ navigation }) {
     error: { ...typography.caption, color: colors.danger, marginBottom: spacing.sm },
     sectionTitle: { ...typography.h3, color: colors.text, marginTop: spacing.lg, marginBottom: spacing.sm },
     addressCard: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm },
-    addressIcon: { fontSize: 20, marginRight: spacing.sm },
+    addressIconWrap: {
+      width: 36,
+      height: 36,
+      borderRadius: radii.pill,
+      backgroundColor: colors.primaryTint,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: spacing.sm
+    },
     addressLabel: { ...typography.bodyStrong, color: colors.text },
     addressText: { ...typography.caption, color: colors.textMuted },
-    addNewLink: { ...typography.bodyStrong, color: colors.primary, marginTop: spacing.xs }
+    addNewLink: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: spacing.xs },
+    addNewLinkText: { ...typography.bodyStrong, color: colors.primary }
   });
 
   const handleUseGps = async () => {
@@ -81,7 +91,9 @@ export default function LocationPickerScreen({ navigation }) {
                 }}
               >
                 <Card style={styles.addressCard}>
-                  <Text style={styles.addressIcon}>📍</Text>
+                  <View style={styles.addressIconWrap}>
+                    <Icon name="location" size={18} color={colors.primary} />
+                  </View>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.addressLabel}>{item.label}</Text>
                     <Text style={styles.addressText} numberOfLines={1}>{item.address_text}</Text>
@@ -100,9 +112,10 @@ export default function LocationPickerScreen({ navigation }) {
           <Button title={t('location.save')} onPress={handleSaveAddress} loading={saving} style={{ marginTop: spacing.xs }} />
         </Card>
       ) : (
-        <Text style={styles.addNewLink} onPress={() => setShowAddForm(true)}>
-          + {t('location.addNew')}
-        </Text>
+        <Pressable style={styles.addNewLink} onPress={() => setShowAddForm(true)}>
+          <Icon name="add-circle-outline" size={18} color={colors.primary} />
+          <Text style={styles.addNewLinkText}>{t('location.addNew')}</Text>
+        </Pressable>
       )}
     </ScreenContainer>
   );

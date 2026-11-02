@@ -16,6 +16,7 @@ CREATE TABLE users (
   phone VARCHAR(20) UNIQUE,
   password_hash VARCHAR(200),
   preferred_language VARCHAR(10) NOT NULL DEFAULT 'en',
+  avatar_url VARCHAR(500),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

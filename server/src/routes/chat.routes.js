@@ -81,6 +81,8 @@ function extractMaxPrice(message) {
   if (contextual) return Number(contextual[1]);
   const withUnit = message.match(/(\d+)\s*(?:rs\.?|rupees?|₹)/i);
   if (withUnit) return Number(withUnit[1]);
+  const symbolFirst = message.match(/₹\s*(\d+)/);
+  if (symbolFirst) return Number(symbolFirst[1]);
   return null;
 }
 

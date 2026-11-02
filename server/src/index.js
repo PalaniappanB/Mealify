@@ -11,6 +11,7 @@ const paymentsRoutes = require('./routes/payments.routes');
 const addressesRoutes = require('./routes/addresses.routes');
 const partnerDashboardRoutes = require('./routes/partnerDashboard.routes');
 const chatRoutes = require('./routes/chat.routes');
+const { refreshExpiredListings } = require('./db/refresh-demo-data');
 
 const app = express();
 app.use(cors());
@@ -39,3 +40,10 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Mealify API listening on http://0.0.0.0:${PORT}`);
 });
+
+// Keep demo listings perpetually "active" without needing a manual re-seed —
+// matters once this runs unattended on a server instead of a dev machine.
+refreshExpiredListings().catch((err) => console.error('Initial demo-data refresh failed:', err.message));
+setInterval(() => {
+  refreshExpiredListings().catch((err) => console.error('Scheduled demo-data refresh failed:', err.message));
+}, 60 * 60 * 1000);

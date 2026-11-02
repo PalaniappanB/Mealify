@@ -17,7 +17,12 @@
         "backgroundColor": "#FFF8F0"
       },
       "package": "com.mealify.app",
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro"
@@ -29,6 +34,12 @@
           "locationWhenInUsePermission": "Mealify uses your location to show Mealify Bags near you."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0050bc38-7d49-4f8e-a481-19deec78ab84"
+      }
+    },
+    "owner": "palaniappan333s-team"
   }
 }

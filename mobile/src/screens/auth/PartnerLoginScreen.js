@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
@@ -15,6 +15,7 @@ export default function PartnerLoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const passwordRef = useRef(null);
 
   const styles = StyleSheet.create({
     title: { ...typography.h1, color: colors.text, marginTop: spacing.lg, marginBottom: spacing.xs },
@@ -51,13 +52,19 @@ export default function PartnerLoginScreen({ navigation }) {
         autoCapitalize="none"
         keyboardType="email-address"
         placeholder="manager@partner.mealify.demo"
+        returnKeyType="next"
+        onSubmitEditing={() => passwordRef.current?.focus()}
+        blurOnSubmit={false}
       />
       <Input
+        ref={passwordRef}
         label={t('auth.password')}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         placeholder="••••••••"
+        returnKeyType="done"
+        onSubmitEditing={submit}
       />
       <Button title={t('auth.login')} onPress={submit} loading={loading} style={{ marginTop: spacing.sm }} />
       <View style={styles.linkRow}>

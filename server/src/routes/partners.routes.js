@@ -15,10 +15,13 @@ router.get('/', async (req, res) => {
       where += ` AND p.cuisine_type = $${params.length}`;
     }
     const result = await pool.query(
-      `SELECT p.*, COUNT(l.id) FILTER (WHERE l.status = 'active' AND l.quantity_available > 0) AS active_listing_count,
-              MIN(l.discounted_price) FILTER (WHERE l.status = 'active' AND l.quantity_available > 0) AS min_price
+      `SELECT p.*, COUNT(DISTINCT l.id) FILTER (WHERE l.status = 'active' AND l.quantity_available > 0) AS active_listing_count,
+              MIN(l.discounted_price) FILTER (WHERE l.status = 'active' AND l.quantity_available > 0) AS min_price,
+              ROUND(AVG(r.rating)::numeric, 2) AS average_rating,
+              COUNT(DISTINCT r.id)::int AS review_count
        FROM partners p
        LEFT JOIN listings l ON l.partner_id = p.id
+       LEFT JOIN reviews r ON r.partner_id = p.id
        ${where}
        GROUP BY p.id
        ORDER BY p.name`,
@@ -50,7 +53,12 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const { lat, lng } = req.query;
   try {
-    const partnerResult = await pool.query('SELECT * FROM partners WHERE id = $1', [id]);
+    const partnerResult = await pool.query(
+      `SELECT p.*, ROUND(AVG(r.rating)::numeric, 2) AS average_rating, COUNT(r.id)::int AS review_count
+       FROM partners p LEFT JOIN reviews r ON r.partner_id = p.id
+       WHERE p.id = $1 GROUP BY p.id`,
+      [id]
+    );
     const partner = partnerResult.rows[0];
     if (!partner) return res.status(404).json({ error: 'Partner not found' });
 

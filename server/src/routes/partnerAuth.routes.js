@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT ps.*, p.name AS partner_name FROM partner_staff ps
+      `SELECT ps.*, p.name AS partner_name, p.city, p.cuisine_type, p.logo_url, p.is_active FROM partner_staff ps
        JOIN partners p ON p.id = ps.partner_id
        WHERE ps.email = $1`,
       [email]
@@ -81,7 +81,7 @@ router.post('/signup', async (req, res) => {
 
 router.get('/me', authRequired('partner_staff'), async (req, res) => {
   const result = await pool.query(
-    `SELECT ps.id, ps.name, ps.email, ps.partner_id, p.name AS partner_name, p.city, p.cuisine_type, p.logo_url
+    `SELECT ps.id, ps.name, ps.email, ps.partner_id, p.name AS partner_name, p.city, p.cuisine_type, p.logo_url, p.is_active
      FROM partner_staff ps JOIN partners p ON p.id = ps.partner_id
      WHERE ps.id = $1`,
     [req.auth.sub]

@@ -1,13 +1,17 @@
 -- Mealify database schema
 
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS favorites CASCADE;
 DROP TABLE IF EXISTS payments CASCADE;
 DROP TABLE IF EXISTS order_items CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS addresses CASCADE;
+DROP TABLE IF EXISTS partner_items CASCADE;
 DROP TABLE IF EXISTS listings CASCADE;
 DROP TABLE IF EXISTS partner_staff CASCADE;
 DROP TABLE IF EXISTS partners CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -39,6 +43,28 @@ CREATE TABLE partner_staff (
   name VARCHAR(120) NOT NULL,
   email VARCHAR(160) UNIQUE NOT NULL,
   password_hash VARCHAR(200) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE admins (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(160) UNIQUE NOT NULL,
+  password_hash VARCHAR(200) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Reusable dish catalog ("item master") so partners don't retype a listing's
+-- title/description/price from scratch every time they list surplus stock.
+CREATE TABLE partner_items (
+  id SERIAL PRIMARY KEY,
+  partner_id INTEGER NOT NULL REFERENCES partners(id) ON DELETE CASCADE,
+  name VARCHAR(150) NOT NULL,
+  description TEXT,
+  category VARCHAR(60),
+  original_price NUMERIC(8,2),
+  discounted_price NUMERIC(8,2),
+  image_url VARCHAR(500),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -99,9 +125,30 @@ CREATE TABLE payments (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE reviews (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER NOT NULL UNIQUE REFERENCES orders(id) ON DELETE CASCADE,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  partner_id INTEGER NOT NULL REFERENCES partners(id) ON DELETE CASCADE,
+  rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE favorites (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  partner_id INTEGER NOT NULL REFERENCES partners(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(user_id, partner_id)
+);
+
 CREATE INDEX idx_listings_partner ON listings(partner_id);
 CREATE INDEX idx_listings_status ON listings(status);
 CREATE INDEX idx_orders_user ON orders(user_id);
 CREATE INDEX idx_orders_partner ON orders(partner_id);
 CREATE INDEX idx_order_items_order ON order_items(order_id);
 CREATE INDEX idx_partners_city ON partners(city);
+CREATE INDEX idx_partner_items_partner ON partner_items(partner_id);
+CREATE INDEX idx_reviews_partner ON reviews(partner_id);
+CREATE INDEX idx_favorites_user ON favorites(user_id);

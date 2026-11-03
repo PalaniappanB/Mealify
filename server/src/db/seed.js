@@ -102,6 +102,8 @@ const CUSTOMERS = [
 
 const DEMO_PASSWORD = 'password123';
 const PARTNER_PASSWORD = 'partner123';
+const ADMIN_EMAIL = 'admin@mealify.demo';
+const ADMIN_PASSWORD = 'admin123';
 
 function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '');
@@ -180,12 +182,19 @@ async function seed() {
     partnerListingIds.push({ partnerId, listings: idsForPartner });
   }
 
-  // Historical orders for the first two customers
+  // Historical orders, spread across partners/customers so admin analytics and
+  // partner ratings have realistic, varied demo data instead of one or two points.
   const pastOrders = [
-    { customerIdx: 0, partnerIdx: 0, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 30 },
-    { customerIdx: 0, partnerIdx: 2, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 10 },
+    { customerIdx: 0, partnerIdx: 0, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 30, review: { rating: 5, comment: 'Pastries were fresh and the pickup was quick!' } },
+    { customerIdx: 0, partnerIdx: 2, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 10, review: { rating: 4, comment: 'Good dosa, a bit cold by pickup time.' } },
     { customerIdx: 1, partnerIdx: 3, status: 'cancelled', paymentStatus: 'refunded', hoursAgoPlaced: 20 },
-    { customerIdx: 1, partnerIdx: 6, status: 'ready', paymentStatus: 'paid', hoursAgoPlaced: 1 }
+    { customerIdx: 1, partnerIdx: 6, status: 'ready', paymentStatus: 'paid', hoursAgoPlaced: 1 },
+    { customerIdx: 2, partnerIdx: 1, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 48, review: { rating: 5, comment: 'Great value thali, will order again.' } },
+    { customerIdx: 2, partnerIdx: 4, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 15, review: { rating: 3, comment: 'Portion was smaller than expected.' } },
+    { customerIdx: 3, partnerIdx: 5, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 60, review: { rating: 5, comment: 'Butter chicken was excellent for the price.' } },
+    { customerIdx: 3, partnerIdx: 7, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 5, review: { rating: 4, comment: 'Tasty meals combo, good portion size.' } },
+    { customerIdx: 4, partnerIdx: 8, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 36, review: { rating: 5, comment: 'Pasta box saved my evening, delicious.' } },
+    { customerIdx: 4, partnerIdx: 9, status: 'completed', paymentStatus: 'paid', hoursAgoPlaced: 8, review: { rating: 4, comment: 'Good noodles, generous spring rolls.' } }
   ];
 
   for (const po of pastOrders) {
@@ -218,7 +227,32 @@ async function seed() {
         [orderId, `mock_seed_${orderId}`, total, placedAt]
       );
     }
+
+    if (po.status === 'completed' && po.review) {
+      await pool.query(
+        `INSERT INTO reviews (order_id, user_id, partner_id, rating, comment, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [orderId, userId, partnerId, po.review.rating, po.review.comment, placedAt]
+      );
+    }
   }
+
+  // One favorite each for a couple of customers, so the favorites feature has demo data too.
+  await pool.query(
+    `INSERT INTO favorites (user_id, partner_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [customerIds[0], partnerListingIds[0].partnerId]
+  );
+  await pool.query(
+    `INSERT INTO favorites (user_id, partner_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+    [customerIds[1], partnerListingIds[6].partnerId]
+  );
+
+  const adminPasswordHash = await bcrypt.hash(ADMIN_PASSWORD, 10);
+  await pool.query(
+    `INSERT INTO admins (name, email, password_hash) VALUES ($1, $2, $3)
+     ON CONFLICT (email) DO NOTHING`,
+    ['Mealify Admin', ADMIN_EMAIL, adminPasswordHash]
+  );
 
   console.log('Seed complete.');
   console.log(`  Partners: ${PARTNERS.length}`);
@@ -226,6 +260,7 @@ async function seed() {
   console.log(`  Partner staff password: ${PARTNER_PASSWORD}`);
   console.log('  Sample customer login: aditi.sharma@example.com / password123');
   console.log('  Sample partner login: manager@bombay.bites.bakery.mealify.demo / partner123');
+  console.log(`  Admin login: ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
 
   await pool.end();
 }

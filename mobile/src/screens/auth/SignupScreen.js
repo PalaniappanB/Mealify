@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
@@ -17,6 +17,9 @@ export default function SignupScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const emailRef = useRef(null);
+  const phoneRef = useRef(null);
+  const passwordRef = useRef(null);
 
   const styles = StyleSheet.create({
     title: { ...typography.h1, color: colors.text, marginTop: spacing.lg, marginBottom: spacing.lg },
@@ -49,28 +52,47 @@ export default function SignupScreen({ navigation }) {
     <ScreenContainer scroll>
       <Text style={styles.title}>{t('auth.signup')}</Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Input label={t('auth.name')} value={name} onChangeText={setName} placeholder="Aditi Sharma" />
       <Input
+        label={t('auth.name')}
+        value={name}
+        onChangeText={setName}
+        placeholder="Aditi Sharma"
+        returnKeyType="next"
+        onSubmitEditing={() => emailRef.current?.focus()}
+        blurOnSubmit={false}
+      />
+      <Input
+        ref={emailRef}
         label={t('auth.email')}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
         placeholder="you@example.com"
+        returnKeyType="next"
+        onSubmitEditing={() => phoneRef.current?.focus()}
+        blurOnSubmit={false}
       />
       <Input
+        ref={phoneRef}
         label={t('auth.phone')}
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
         placeholder="9820011122"
+        returnKeyType="next"
+        onSubmitEditing={() => passwordRef.current?.focus()}
+        blurOnSubmit={false}
       />
       <Input
+        ref={passwordRef}
         label={t('auth.password')}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         placeholder="••••••••"
+        returnKeyType="done"
+        onSubmitEditing={submit}
       />
       <Button title={t('auth.signup')} onPress={submit} loading={loading} style={{ marginTop: spacing.sm }} />
 

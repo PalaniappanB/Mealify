@@ -22,7 +22,7 @@ router.get('/listings', async (req, res) => {
 router.post('/listings', async (req, res) => {
   const {
     title, description, original_price, discounted_price,
-    quantity_available, pickup_window_start, pickup_window_end, expires_at
+    quantity_available, pickup_window_start, pickup_window_end, expires_at, image_url
   } = req.body;
 
   if (!title || !original_price || !discounted_price || !quantity_available || !pickup_window_start || !pickup_window_end || !expires_at) {
@@ -31,10 +31,10 @@ router.post('/listings', async (req, res) => {
 
   const result = await pool.query(
     `INSERT INTO listings (partner_id, title, description, original_price, discounted_price,
-                            quantity_available, pickup_window_start, pickup_window_end, expires_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+                            quantity_available, pickup_window_start, pickup_window_end, expires_at, image_url)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
     [req.auth.partnerId, title, description || null, original_price, discounted_price,
-      quantity_available, pickup_window_start, pickup_window_end, expires_at]
+      quantity_available, pickup_window_start, pickup_window_end, expires_at, image_url || null]
   );
   res.status(201).json({ listing: result.rows[0] });
 });
@@ -104,6 +104,90 @@ router.post('/logo', upload.single('image'), async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Image upload failed' });
   }
+});
+
+// ---- Item master (reusable dish catalog) ----
+
+router.get('/items', async (req, res) => {
+  const result = await pool.query(
+    `SELECT * FROM partner_items WHERE partner_id = $1 ORDER BY name`,
+    [req.auth.partnerId]
+  );
+  res.json({ items: result.rows });
+});
+
+router.post('/items', async (req, res) => {
+  const { name, description, category, original_price, discounted_price } = req.body;
+  if (!name) return res.status(400).json({ error: 'name is required' });
+
+  const result = await pool.query(
+    `INSERT INTO partner_items (partner_id, name, description, category, original_price, discounted_price)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+    [req.auth.partnerId, name, description || null, category || null, original_price || null, discounted_price || null]
+  );
+  res.status(201).json({ item: result.rows[0] });
+});
+
+router.put('/items/:id', async (req, res) => {
+  const { name, description, category, original_price, discounted_price } = req.body;
+  const result = await pool.query(
+    `UPDATE partner_items SET
+        name = COALESCE($1, name),
+        description = COALESCE($2, description),
+        category = COALESCE($3, category),
+        original_price = COALESCE($4, original_price),
+        discounted_price = COALESCE($5, discounted_price)
+     WHERE id = $6 AND partner_id = $7 RETURNING *`,
+    [name, description, category, original_price, discounted_price, req.params.id, req.auth.partnerId]
+  );
+  if (!result.rows[0]) return res.status(404).json({ error: 'Item not found' });
+  res.json({ item: result.rows[0] });
+});
+
+router.delete('/items/:id', async (req, res) => {
+  const result = await pool.query(
+    `DELETE FROM partner_items WHERE id = $1 AND partner_id = $2 RETURNING id`,
+    [req.params.id, req.auth.partnerId]
+  );
+  if (!result.rows[0]) return res.status(404).json({ error: 'Item not found' });
+  res.status(204).end();
+});
+
+router.post('/items/:id/image', upload.single('image'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'image file is required' });
+  try {
+    const owned = await pool.query('SELECT id FROM partner_items WHERE id = $1 AND partner_id = $2', [
+      req.params.id,
+      req.auth.partnerId
+    ]);
+    if (!owned.rows[0]) return res.status(404).json({ error: 'Item not found' });
+
+    const ext = (req.file.originalname.split('.').pop() || 'jpg').toLowerCase();
+    const path = `items/${req.params.id}-${Date.now()}.${ext}`;
+    const publicUrl = await uploadImage(req.file.buffer, path, req.file.mimetype);
+
+    const result = await pool.query(
+      `UPDATE partner_items SET image_url = $1 WHERE id = $2 AND partner_id = $3 RETURNING *`,
+      [publicUrl, req.params.id, req.auth.partnerId]
+    );
+    res.json({ item: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Image upload failed' });
+  }
+});
+
+// ---- Store status ----
+
+router.put('/store/status', async (req, res) => {
+  const { is_active } = req.body;
+  if (typeof is_active !== 'boolean') return res.status(400).json({ error: 'is_active must be true or false' });
+
+  const result = await pool.query(
+    `UPDATE partners SET is_active = $1 WHERE id = $2 RETURNING *`,
+    [is_active, req.auth.partnerId]
+  );
+  res.json({ partner: result.rows[0] });
 });
 
 // ---- Orders management ----
@@ -182,9 +266,16 @@ router.get('/reports', async (req, res) => {
     [partnerId]
   );
 
+  const ratingResult = await pool.query(
+    `SELECT ROUND(AVG(rating)::numeric, 2) AS average_rating, COUNT(*)::int AS review_count
+     FROM reviews WHERE partner_id = $1`,
+    [partnerId]
+  );
+
   res.json({
     ...totalsResult.rows[0],
     ...itemsResult.rows[0],
+    ...ratingResult.rows[0],
     dailyBreakdown: dailyResult.rows,
     topListings: topListingsResult.rows
   });

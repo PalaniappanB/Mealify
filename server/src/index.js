@@ -11,6 +11,10 @@ const paymentsRoutes = require('./routes/payments.routes');
 const addressesRoutes = require('./routes/addresses.routes');
 const partnerDashboardRoutes = require('./routes/partnerDashboard.routes');
 const chatRoutes = require('./routes/chat.routes');
+const adminAuthRoutes = require('./routes/adminAuth.routes');
+const adminRoutes = require('./routes/admin.routes');
+const reviewsRoutes = require('./routes/reviews.routes');
+const favoritesRoutes = require('./routes/favorites.routes');
 const { refreshExpiredListings } = require('./db/refresh-demo-data');
 
 const app = express();
@@ -28,6 +32,10 @@ app.use('/api/payments', paymentsRoutes);
 app.use('/api/addresses', addressesRoutes);
 app.use('/api/partner', partnerDashboardRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/admin-auth', adminAuthRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/reviews', reviewsRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 // eslint-disable-next-line no-unused-vars

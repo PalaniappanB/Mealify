@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
@@ -7,14 +7,18 @@ import Button from '../../components/Button';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../context/AuthContext';
 
+const EMAIL_OR_PHONE_RE = /^(\S+@\S+\.\S+|\d{7,15})$/;
+
 export default function LoginScreen({ navigation }) {
   const { t } = useTranslation();
   const { colors, spacing, typography } = useTheme();
   const { loginCustomer } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [touched, setTouched] = useState({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const passwordRef = useRef(null);
 
   const styles = StyleSheet.create({
     title: { ...typography.h1, color: colors.text, marginTop: spacing.lg, marginBottom: spacing.xs },
@@ -25,8 +29,15 @@ export default function LoginScreen({ navigation }) {
     linkText: { ...typography.body, color: colors.textMuted }
   });
 
+  const emailError =
+    touched.email && !EMAIL_OR_PHONE_RE.test(email.trim()) ? t('auth.errorEmailRequired') : '';
+  const passwordError = touched.password && !password ? t('auth.errorPasswordRequired') : '';
+
+  const markTouched = (field) => () => setTouched((t_) => ({ ...t_, [field]: true }));
+
   const submit = async () => {
     setError('');
+    setTouched({ email: true, password: true });
     if (!email.trim()) return setError(t('auth.errorEmailRequired'));
     if (!password) return setError(t('auth.errorPasswordRequired'));
     setLoading(true);
@@ -48,16 +59,26 @@ export default function LoginScreen({ navigation }) {
         label={t('auth.email')}
         value={email}
         onChangeText={setEmail}
+        onBlur={markTouched('email')}
+        error={emailError}
         autoCapitalize="none"
         keyboardType="email-address"
         placeholder="you@example.com"
+        returnKeyType="next"
+        onSubmitEditing={() => passwordRef.current?.focus()}
+        blurOnSubmit={false}
       />
       <Input
+        ref={passwordRef}
         label={t('auth.password')}
         value={password}
         onChangeText={setPassword}
+        onBlur={markTouched('password')}
+        error={passwordError}
         secureTextEntry
         placeholder="••••••••"
+        returnKeyType="done"
+        onSubmitEditing={submit}
       />
       <Button title={t('auth.login')} onPress={submit} loading={loading} style={{ marginTop: spacing.sm }} />
       <Text

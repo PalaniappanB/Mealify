@@ -71,8 +71,11 @@ router.post('/', authRequired('customer'), async (req, res) => {
 
 router.get('/', authRequired('customer'), async (req, res) => {
   const result = await pool.query(
-    `SELECT o.*, p.name AS partner_name, p.logo_url, p.address AS partner_address
-     FROM orders o JOIN partners p ON p.id = o.partner_id
+    `SELECT o.*, p.name AS partner_name, p.logo_url, p.address AS partner_address,
+            (r.id IS NOT NULL) AS has_review
+     FROM orders o
+     JOIN partners p ON p.id = o.partner_id
+     LEFT JOIN reviews r ON r.order_id = o.id
      WHERE o.user_id = $1
      ORDER BY o.created_at DESC`,
     [req.auth.sub]

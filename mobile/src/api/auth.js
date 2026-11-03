@@ -13,3 +13,6 @@ export const resetPassword = (payload) => client.post('/auth/password/reset', pa
 export const partnerLogin = (payload) => client.post('/partner-auth/login', payload).then((r) => r.data);
 export const partnerSignup = (payload) => client.post('/partner-auth/signup', payload).then((r) => r.data);
 export const fetchPartnerMe = () => client.get('/partner-auth/me').then((r) => r.data.staff);
+
+export const adminLogin = (payload) => client.post('/admin-auth/login', payload).then((r) => r.data);
+export const fetchAdminMe = () => client.get('/admin-auth/me').then((r) => r.data.admin);

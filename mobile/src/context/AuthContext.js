@@ -7,9 +7,10 @@ import i18n from '../i18n';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [role, setRole] = useState(null); // 'customer' | 'partner_staff' | null
+  const [role, setRole] = useState(null); // 'customer' | 'partner_staff' | 'admin' | null
   const [user, setUser] = useState(null);
   const [staff, setStaff] = useState(null);
+  const [admin, setAdmin] = useState(null);
   const [booting, setBooting] = useState(true);
 
   const restore = useCallback(async () => {
@@ -32,6 +33,10 @@ export function AuthProvider({ children }) {
         const me = await authApi.fetchPartnerMe();
         setStaff(me);
         setRole('partner_staff');
+      } else if (savedRole === 'admin') {
+        const me = await authApi.fetchAdminMe();
+        setAdmin(me);
+        setRole('admin');
       }
     } catch (err) {
       await AsyncStorage.multiRemove([TOKEN_KEY, ROLE_KEY]);
@@ -97,6 +102,14 @@ export function AuthProvider({ children }) {
     return newStaff;
   };
 
+  const loginAdmin = async (payload) => {
+    const { token, admin: loggedInAdmin } = await authApi.adminLogin(payload);
+    await persistSession(token, 'admin');
+    setAdmin(loggedInAdmin);
+    setRole('admin');
+    return loggedInAdmin;
+  };
+
   const updateLanguage = async (lang) => {
     i18n.changeLanguage(lang);
     if (role === 'customer') {
@@ -115,6 +128,7 @@ export function AuthProvider({ children }) {
     await AsyncStorage.multiRemove([TOKEN_KEY, ROLE_KEY]);
     setUser(null);
     setStaff(null);
+    setAdmin(null);
     setRole(null);
   };
 
@@ -123,6 +137,7 @@ export function AuthProvider({ children }) {
       role,
       user,
       staff,
+      admin,
       booting,
       isAuthenticated: !!role,
       loginCustomer,
@@ -131,11 +146,12 @@ export function AuthProvider({ children }) {
       resetPasswordLogin,
       loginPartner,
       signupPartner,
+      loginAdmin,
       updateLanguage,
       updateProfile,
       logout
     }),
-    [role, user, staff, booting]
+    [role, user, staff, admin, booting]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

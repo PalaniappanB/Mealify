@@ -8,6 +8,19 @@
     "incomingOrders": "ऑर्डर",
     "reports": "रिपोर्ट"
   },
+  "admin": {
+    "dashboard": "एडमिन डैशबोर्ड",
+    "totalRevenue": "प्लेटफ़ॉर्म आय",
+    "totalOrders": "कुल ऑर्डर",
+    "activePartners": "सक्रिय पार्टनर",
+    "totalCustomers": "कुल ग्राहक",
+    "bagsRescued": "बचाए गए बैग्स",
+    "averageRating": "औसत रेटिंग",
+    "leaderboard": "पार्टनर लीडरबोर्ड",
+    "orders": "ऑर्डर",
+    "topItems": "सबसे ज़्यादा बिकने वाले व्यंजन",
+    "cuisinePopularity": "लोकप्रिय व्यंजन प्रकार"
+  },
   "reports": {
     "title": "रिपोर्ट",
     "totalRevenue": "कुल आय",
@@ -76,7 +89,8 @@
     "forgotPasswordTitle": "अपना पासवर्ड रीसेट करें",
     "forgotPasswordSubtitle": "हम आपके फ़ोन नंबर पर एक वेरिफिकेशन कोड भेजेंगे।",
     "newPassword": "नया पासवर्ड",
-    "resetPassword": "पासवर्ड रीसेट करें"
+    "resetPassword": "पासवर्ड रीसेट करें",
+    "adminLogin": "एडमिन लॉगिन"
   },
   "home": {
     "greeting": "पास में कुछ स्वादिष्ट?",
@@ -156,6 +170,24 @@
   "partner": {
     "activeBags": "उपलब्ध Mealify बैग्स",
     "noActiveBags": "अभी कोई बैग उपलब्ध नहीं है।"
+  },
+  "reviews": {
+    "title": "रेटिंग और रिव्यू",
+    "countLabel": "{{count}} रिव्यू",
+    "rateTitle": "अपने ऑर्डर को रेट करें",
+    "rateSubtitle": "{{partner}} के साथ आपका अनुभव कैसा रहा?",
+    "rateThisOrder": "इस ऑर्डर को रेट करें",
+    "alreadyRated": "आपने इस ऑर्डर को रेट किया है",
+    "pickRatingTitle": "रेटिंग चुनें",
+    "pickRatingMessage": "सबमिट करने से पहले स्टार पर टैप करें।",
+    "commentPlaceholder": "अधिक बताएं (वैकल्पिक)",
+    "submit": "रिव्यू सबमिट करें",
+    "submitError": "रिव्यू सबमिट नहीं हो सका। फिर से प्रयास करें।"
+  },
+  "favorites": {
+    "title": "मेरे फ़ेवरेट",
+    "empty": "अभी कोई फ़ेवरेट नहीं",
+    "emptySubtitle": "किसी रेस्टोरेंट को यहां सहेजने के लिए हार्ट पर टैप करें।"
   },
   "cart": {
     "title": "आपका कार्ट",

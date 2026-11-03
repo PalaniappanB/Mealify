@@ -8,6 +8,19 @@
     "incomingOrders": "ఆర్డర్లు",
     "reports": "నివేదికలు"
   },
+  "admin": {
+    "dashboard": "అడ్మిన్ డాష్‌బోర్డ్",
+    "totalRevenue": "ప్లాట్‌ఫారమ్ ఆదాయం",
+    "totalOrders": "మొత్తం ఆర్డర్లు",
+    "activePartners": "యాక్టివ్ పార్ట్‌నర్లు",
+    "totalCustomers": "మొత్తం కస్టమర్లు",
+    "bagsRescued": "రక్షించిన బ్యాగ్‌లు",
+    "averageRating": "సగటు రేటింగ్",
+    "leaderboard": "పార్ట్‌నర్ లీడర్‌బోర్డ్",
+    "orders": "ఆర్డర్లు",
+    "topItems": "ఎక్కువగా అమ్ముడైన వంటకాలు",
+    "cuisinePopularity": "ప్రజాదరణ పొందిన వంటకాలు"
+  },
   "reports": {
     "title": "నివేదికలు",
     "totalRevenue": "మొత్తం ఆదాయం",
@@ -76,7 +89,8 @@
     "forgotPasswordTitle": "మీ పాస్‌వర్డ్‌ని రీసెట్ చేయండి",
     "forgotPasswordSubtitle": "మేము మీ ఫోన్ నంబర్‌కు ధృవీకరణ కోడ్‌ను పంపుతాము.",
     "newPassword": "కొత్త పాస్‌వర్డ్",
-    "resetPassword": "పాస్‌వర్డ్‌ని రీసెట్ చేయండి"
+    "resetPassword": "పాస్‌వర్డ్‌ని రీసెట్ చేయండి",
+    "adminLogin": "అడ్మిన్ లాగిన్"
   },
   "home": {
     "greeting": "దగ్గర్లో ఆకలిగా ఉందా?",
@@ -156,6 +170,24 @@
   "partner": {
     "activeBags": "యాక్టివ్ Mealify బ్యాగ్‌లు",
     "noActiveBags": "ప్రస్తుతం యాక్టివ్ బ్యాగ్‌లు లేవు."
+  },
+  "reviews": {
+    "title": "రేటింగ్‌లు & రివ్యూలు",
+    "countLabel": "{{count}} రివ్యూ",
+    "rateTitle": "మీ ఆర్డర్‌ని రేట్ చేయండి",
+    "rateSubtitle": "{{partner}} తో మీ అనుభవం ఎలా ఉంది?",
+    "rateThisOrder": "ఈ ఆర్డర్‌ని రేట్ చేయండి",
+    "alreadyRated": "మీరు ఈ ఆర్డర్‌ని రేట్ చేసారు",
+    "pickRatingTitle": "రేటింగ్ ఎంచుకోండి",
+    "pickRatingMessage": "సమర్పించే ముందు స్టార్‌ని నొక్కండి.",
+    "commentPlaceholder": "మరింత చెప్పండి (ఆప్షనల్)",
+    "submit": "రివ్యూ సమర్పించండి",
+    "submitError": "రివ్యూ సమర్పించలేకపోయాం. మళ్ళీ ప్రయత్నించండి."
+  },
+  "favorites": {
+    "title": "నా ఫేవరెట్లు",
+    "empty": "ఇంకా ఫేవరెట్లు లేవు",
+    "emptySubtitle": "త్వరిత రీఆర్డర్ కోసం రెస్టారెంట్‌ని సేవ్ చేయడానికి హార్ట్‌ని నొక్కండి."
   },
   "cart": {
     "title": "మీ కార్ట్",

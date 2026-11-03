@@ -6,9 +6,11 @@ import LanguageSelectScreen, { LANGUAGE_CHOSEN_KEY } from '../screens/onboarding
 import AuthNavigator from './AuthNavigator';
 import CustomerNavigator from './CustomerNavigator';
 import PartnerNavigator from './PartnerNavigator';
+import AdminNavigator from './AdminNavigator';
 import { useAuth } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import { LocationProvider } from '../context/LocationContext';
+import { FavoritesProvider } from '../context/FavoritesContext';
 
 export default function RootNavigator() {
   const { booting, isAuthenticated, role } = useAuth();
@@ -28,10 +30,14 @@ export default function RootNavigator() {
         <AuthNavigator />
       ) : role === 'partner_staff' ? (
         <PartnerNavigator />
+      ) : role === 'admin' ? (
+        <AdminNavigator />
       ) : (
         <LocationProvider>
           <CartProvider>
-            <CustomerNavigator />
+            <FavoritesProvider>
+              <CustomerNavigator />
+            </FavoritesProvider>
           </CartProvider>
         </LocationProvider>
       )}

@@ -8,6 +8,19 @@
     "incomingOrders": "Orders",
     "reports": "Reports"
   },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "totalRevenue": "Platform revenue",
+    "totalOrders": "Total orders",
+    "activePartners": "Active partners",
+    "totalCustomers": "Total customers",
+    "bagsRescued": "Bags rescued",
+    "averageRating": "Avg. rating",
+    "leaderboard": "Partner leaderboard",
+    "orders": "orders",
+    "topItems": "Top-selling dishes",
+    "cuisinePopularity": "Popular cuisines"
+  },
   "reports": {
     "title": "Reports",
     "totalRevenue": "Total revenue",
@@ -76,7 +89,8 @@
     "forgotPasswordTitle": "Reset your password",
     "forgotPasswordSubtitle": "We'll text a verification code to your phone number.",
     "newPassword": "New password",
-    "resetPassword": "Reset password"
+    "resetPassword": "Reset password",
+    "adminLogin": "Admin login"
   },
   "home": {
     "greeting": "Hungry nearby?",
@@ -156,6 +170,25 @@
   "partner": {
     "activeBags": "Active Mealify Bags",
     "noActiveBags": "No active bags right now."
+  },
+  "reviews": {
+    "title": "Ratings & reviews",
+    "countLabel": "{{count}} review",
+    "countLabel_plural": "{{count}} reviews",
+    "rateTitle": "Rate your order",
+    "rateSubtitle": "How was your experience with {{partner}}?",
+    "rateThisOrder": "Rate this order",
+    "alreadyRated": "You rated this order",
+    "pickRatingTitle": "Pick a rating",
+    "pickRatingMessage": "Tap a star to rate this order before submitting.",
+    "commentPlaceholder": "Tell us more (optional)",
+    "submit": "Submit review",
+    "submitError": "Couldn't submit your review. Try again."
+  },
+  "favorites": {
+    "title": "My favourites",
+    "empty": "No favourites yet",
+    "emptySubtitle": "Tap the heart on a restaurant to save it here for quick reordering."
   },
   "cart": {
     "title": "Your cart",

@@ -19,7 +19,8 @@ export default function AuthWelcomeScreen({ navigation }) {
     linkRow: { flexDirection: 'row', justifyContent: 'center', marginTop: spacing.md, gap: 6 },
     link: { ...typography.bodyStrong, color: colors.primary },
     linkText: { ...typography.body, color: colors.textMuted },
-    partnerLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: spacing.lg, gap: 4 }
+    partnerLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: spacing.lg, gap: 4 },
+    adminLink: { ...typography.tiny, color: colors.textFaint, textAlign: 'center', marginTop: spacing.sm }
   });
 
   return (
@@ -41,6 +42,7 @@ export default function AuthWelcomeScreen({ navigation }) {
           <Text style={styles.link} onPress={() => navigation.navigate('PartnerLogin')}>{t('auth.partnerLogin')}</Text>
           <Icon name="arrow-forward" size={14} color={colors.primary} />
         </View>
+        <Text style={styles.adminLink} onPress={() => navigation.navigate('AdminLogin')}>{t('auth.adminLogin')}</Text>
       </View>
     </ScreenContainer>
   );

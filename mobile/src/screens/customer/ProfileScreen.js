@@ -5,6 +5,7 @@ import ScreenContainer from '../../components/ScreenContainer';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useAuth } from '../../context/AuthContext';
 import { SUPPORTED_LANGUAGES } from '../../i18n';
@@ -12,7 +13,7 @@ import i18n from '../../i18n';
 import { formatDate, formatRupees } from '../../utils/format';
 import { fetchImpactSummary } from '../../api/orders';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
   const { t } = useTranslation();
   const { colors, spacing, radii, typography } = useTheme();
   const { user, updateLanguage, updateProfile, logout } = useAuth();
@@ -56,7 +57,9 @@ export default function ProfileScreen() {
     impactRow: { flexDirection: 'row', gap: spacing.sm },
     impactCard: { flex: 1, alignItems: 'center', paddingVertical: spacing.md },
     impactValue: { ...typography.h1, color: colors.primary },
-    impactLabel: { ...typography.caption, color: colors.textMuted, marginTop: 2, textAlign: 'center' }
+    impactLabel: { ...typography.caption, color: colors.textMuted, marginTop: 2, textAlign: 'center' },
+    linkRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: spacing.sm },
+    linkLabel: { ...typography.bodyStrong, color: colors.text }
   });
 
   const startEdit = () => {
@@ -139,6 +142,16 @@ export default function ProfileScreen() {
           </View>
         </>
       ) : null}
+
+      <Card style={{ marginBottom: spacing.sm }}>
+        <Pressable style={styles.linkRow} onPress={() => navigation.navigate('Favorites')}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+            <Icon name="heart-outline" size={18} color={colors.danger} />
+            <Text style={styles.linkLabel}>{t('favorites.title')}</Text>
+          </View>
+          <Icon name="chevron-forward" size={18} color={colors.textFaint} />
+        </Pressable>
+      </Card>
 
       <Text style={styles.sectionTitle}>{t('profile.language')}</Text>
       <View style={styles.langRow}>

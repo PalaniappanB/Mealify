@@ -8,6 +8,8 @@ import LocationPickerScreen from '../screens/customer/LocationPickerScreen';
 import CheckoutScreen from '../screens/customer/CheckoutScreen';
 import PaymentScreen from '../screens/customer/PaymentScreen';
 import OrderConfirmationScreen from '../screens/customer/OrderConfirmationScreen';
+import RateOrderScreen from '../screens/customer/RateOrderScreen';
+import FavoritesScreen from '../screens/customer/FavoritesScreen';
 import { useTheme } from '../theme/ThemeProvider';
 
 const Stack = createNativeStackNavigator();
@@ -36,6 +38,8 @@ export default function CustomerNavigator() {
         component={OrderConfirmationScreen}
         options={{ headerShown: false, gestureEnabled: false }}
       />
+      <Stack.Screen name="RateOrder" component={RateOrderScreen} options={{ title: t('reviews.rateTitle') }} />
+      <Stack.Screen name="Favorites" component={FavoritesScreen} options={{ title: t('favorites.title') }} />
     </Stack.Navigator>
   );
 }

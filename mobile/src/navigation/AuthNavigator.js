@@ -8,6 +8,7 @@ import OtpLoginScreen from '../screens/auth/OtpLoginScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import PartnerLoginScreen from '../screens/auth/PartnerLoginScreen';
 import PartnerSignupScreen from '../screens/auth/PartnerSignupScreen';
+import AdminLoginScreen from '../screens/auth/AdminLoginScreen';
 import { useTheme } from '../theme/ThemeProvider';
 
 const Stack = createNativeStackNavigator();
@@ -32,6 +33,7 @@ export default function AuthNavigator() {
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: t('auth.forgotPasswordTitle') }} />
       <Stack.Screen name="PartnerLogin" component={PartnerLoginScreen} options={{ title: t('auth.partnerLogin') }} />
       <Stack.Screen name="PartnerSignup" component={PartnerSignupScreen} options={{ title: t('partnerSignup.title') }} />
+      <Stack.Screen name="AdminLogin" component={AdminLoginScreen} options={{ title: t('auth.adminLogin') }} />
     </Stack.Navigator>
   );
 }

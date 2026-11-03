@@ -8,6 +8,7 @@ import Badge from '../../components/Badge';
 import Button from '../../components/Button';
 import EmptyState from '../../components/EmptyState';
 import LoadingView from '../../components/LoadingView';
+import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useConfirm } from '../../context/ConfirmContext';
 import { fetchOrders, cancelOrder } from '../../api/orders';
@@ -15,7 +16,7 @@ import { formatRupees, formatDateTime } from '../../utils/format';
 
 const STATUS_TONE = { placed: 'secondary', ready: 'success', completed: 'neutral', cancelled: 'danger' };
 
-export default function OrderHistoryScreen() {
+export default function OrderHistoryScreen({ navigation }) {
   const { t } = useTranslation();
   const { colors, spacing, typography } = useTheme();
   const confirm = useConfirm();
@@ -59,7 +60,9 @@ export default function OrderHistoryScreen() {
     date: { ...typography.tiny, color: colors.textFaint, marginTop: 2 },
     amount: { ...typography.h3, color: colors.primary },
     footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.sm },
-    code: { ...typography.caption, color: colors.textMuted }
+    code: { ...typography.caption, color: colors.textMuted },
+    ratedRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: spacing.xs, alignSelf: 'flex-end' },
+    ratedText: { ...typography.tiny, color: colors.textMuted }
   });
 
   if (loading) return <LoadingView label={t('common.loading')} />;
@@ -91,6 +94,21 @@ export default function OrderHistoryScreen() {
                 style={{ marginTop: spacing.xs, alignSelf: 'flex-end' }}
                 fullWidth={false}
               />
+            ) : null}
+            {item.status === 'completed' && !item.has_review ? (
+              <Button
+                title={t('reviews.rateThisOrder')}
+                variant="outline"
+                onPress={() => navigation.navigate('RateOrder', { order: item })}
+                style={{ marginTop: spacing.xs, alignSelf: 'flex-end' }}
+                fullWidth={false}
+              />
+            ) : null}
+            {item.status === 'completed' && item.has_review ? (
+              <View style={styles.ratedRow}>
+                <Icon name="star" size={12} color={colors.secondaryDark} />
+                <Text style={styles.ratedText}>{t('reviews.alreadyRated')}</Text>
+              </View>
             ) : null}
           </Card>
         )}

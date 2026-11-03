@@ -8,6 +8,19 @@
     "incomingOrders": "آرڈرز",
     "reports": "رپورٹس"
   },
+  "admin": {
+    "dashboard": "ایڈمن ڈیش بورڈ",
+    "totalRevenue": "پلیٹ فارم آمدنی",
+    "totalOrders": "کل آرڈرز",
+    "activePartners": "فعال پارٹنرز",
+    "totalCustomers": "کل صارفین",
+    "bagsRescued": "بچائے گئے بیگز",
+    "averageRating": "اوسط ریٹنگ",
+    "leaderboard": "پارٹنر لیڈر بورڈ",
+    "orders": "آرڈرز",
+    "topItems": "سب سے زیادہ فروخت ہونے والے پکوان",
+    "cuisinePopularity": "مقبول کھانوں کی اقسام"
+  },
   "reports": {
     "title": "رپورٹس",
     "totalRevenue": "کل آمدنی",
@@ -76,7 +89,8 @@
     "forgotPasswordTitle": "اپنا پاس ورڈ ری سیٹ کریں",
     "forgotPasswordSubtitle": "ہم آپ کے فون نمبر پر ایک تصدیقی کوڈ بھیجیں گے۔",
     "newPassword": "نیا پاس ورڈ",
-    "resetPassword": "پاس ورڈ ری سیٹ کریں"
+    "resetPassword": "پاس ورڈ ری سیٹ کریں",
+    "adminLogin": "ایڈمن لاگ ان"
   },
   "home": {
     "greeting": "قریب میں بھوک لگی ہے؟",
@@ -156,6 +170,24 @@
   "partner": {
     "activeBags": "فعال Mealify بیگز",
     "noActiveBags": "ابھی کوئی فعال بیگ نہیں ہے۔"
+  },
+  "reviews": {
+    "title": "ریٹنگز اور جائزے",
+    "countLabel": "{{count}} جائزہ",
+    "rateTitle": "اپنے آرڈر کو ریٹ کریں",
+    "rateSubtitle": "{{partner}} کے ساتھ آپ کا تجربہ کیسا رہا؟",
+    "rateThisOrder": "اس آرڈر کو ریٹ کریں",
+    "alreadyRated": "آپ نے اس آرڈر کو ریٹ کر دیا ہے",
+    "pickRatingTitle": "ریٹنگ منتخب کریں",
+    "pickRatingMessage": "جمع کرانے سے پہلے ایک ستارے پر ٹیپ کریں۔",
+    "commentPlaceholder": "مزید بتائیں (اختیاری)",
+    "submit": "جائزہ جمع کریں",
+    "submitError": "جائزہ جمع نہیں ہو سکا۔ دوبارہ کوشش کریں۔"
+  },
+  "favorites": {
+    "title": "میرے پسندیدہ",
+    "empty": "ابھی تک کوئی پسندیدہ نہیں",
+    "emptySubtitle": "جلدی دوبارہ آرڈر کرنے کے لیے ریستوران کو محفوظ کرنے کے لیے ہارٹ پر ٹیپ کریں۔"
   },
   "cart": {
     "title": "آپ کا کارٹ",

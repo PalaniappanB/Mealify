@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text, View, Image, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, Image, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ScreenContainer from '../../components/ScreenContainer';
 import Input from '../../components/Input';
@@ -7,7 +7,9 @@ import Button from '../../components/Button';
 import Icon from '../../components/Icon';
 import { useTheme } from '../../theme/ThemeProvider';
 import { createPartnerListing, uploadListingImage } from '../../api/orders';
+import { fetchPartnerItems } from '../../api/items';
 import { pickImage } from '../../utils/pickImage';
+import { formatRupees } from '../../utils/format';
 
 export default function AddListingScreen({ navigation }) {
   const { t } = useTranslation();
@@ -22,14 +24,44 @@ export default function AddListingScreen({ navigation }) {
     pickupEndHours: '4'
   });
   const [image, setImage] = useState(null);
+  const [catalogImageUrl, setCatalogImageUrl] = useState(null);
+  const [menuItems, setMenuItems] = useState([]);
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchPartnerItems().then(setMenuItems).catch(() => {});
+  }, []);
 
   const update = (key) => (value) => setForm((f) => ({ ...f, [key]: value }));
 
   const styles = StyleSheet.create({
-    title: { ...typography.h1, color: colors.text, marginBottom: spacing.md },
+    title: { ...typography.h1, color: colors.text, marginBottom: spacing.xs },
     error: { ...typography.caption, color: colors.danger, marginBottom: spacing.sm },
+    menuLabel: { ...typography.h3, color: colors.text, marginTop: spacing.xs, marginBottom: spacing.sm },
+    menuRow: { paddingBottom: spacing.md },
+    menuCard: {
+      width: 110,
+      marginRight: spacing.xs,
+      padding: spacing.xs,
+      borderRadius: radii.md,
+      borderWidth: 1.5
+    },
+    menuThumb: {
+      width: '100%',
+      height: 56,
+      borderRadius: radii.sm,
+      backgroundColor: colors.surfaceAlt,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 4,
+      overflow: 'hidden'
+    },
+    menuThumbImage: { width: '100%', height: '100%' },
+    menuName: { ...typography.tiny, color: colors.text },
+    menuPrice: { ...typography.tiny, color: colors.primary, marginTop: 1 },
+    manageMenuLink: { ...typography.caption, color: colors.primary, marginBottom: spacing.md },
     photoBox: {
       height: 160,
       borderRadius: radii.lg,
@@ -48,7 +80,23 @@ export default function AddListingScreen({ navigation }) {
 
   const choosePhoto = async () => {
     const asset = await pickImage();
-    if (asset) setImage(asset);
+    if (asset) {
+      setImage(asset);
+      setCatalogImageUrl(null);
+    }
+  };
+
+  const pickFromMenu = (item) => {
+    setSelectedItemId(item.id);
+    setForm((f) => ({
+      ...f,
+      title: item.name,
+      description: item.description || '',
+      original_price: item.original_price ? String(item.original_price) : f.original_price,
+      discounted_price: item.discounted_price ? String(item.discounted_price) : f.discounted_price
+    }));
+    setImage(null);
+    setCatalogImageUrl(item.image_url || null);
   };
 
   const submit = async () => {
@@ -78,7 +126,8 @@ export default function AddListingScreen({ navigation }) {
         quantity_available: Number(quantity_available),
         pickup_window_start: start,
         pickup_window_end: end,
-        expires_at: end
+        expires_at: end,
+        image_url: !image ? catalogImageUrl : undefined
       });
     } catch (err) {
       setLoading(false);
@@ -106,9 +155,44 @@ export default function AddListingScreen({ navigation }) {
       <Text style={styles.title}>{t('partnerDashboard.create')}</Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
+      {menuItems.length > 0 ? (
+        <>
+          <Text style={styles.menuLabel}>{t('partnerDashboard.pickFromMenu')}</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.menuRow}>
+            {menuItems.map((item) => {
+              const active = selectedItemId === item.id;
+              return (
+                <Pressable
+                  key={item.id}
+                  style={[styles.menuCard, { borderColor: active ? colors.primary : colors.border, backgroundColor: active ? colors.primaryTint : colors.surface }]}
+                  onPress={() => pickFromMenu(item)}
+                >
+                  <View style={styles.menuThumb}>
+                    {item.image_url ? (
+                      <Image source={{ uri: item.image_url }} style={styles.menuThumbImage} />
+                    ) : (
+                      <Icon name="fast-food-outline" size={18} color={colors.textFaint} />
+                    )}
+                  </View>
+                  <Text style={styles.menuName} numberOfLines={1}>{item.name}</Text>
+                  {item.discounted_price ? (
+                    <Text style={styles.menuPrice}>{formatRupees(item.discounted_price)}</Text>
+                  ) : null}
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+        </>
+      ) : null}
+      <Text style={styles.manageMenuLink} onPress={() => navigation.navigate('PartnerMenu')}>
+        {t('partnerDashboard.manageMenu')}
+      </Text>
+
       <Pressable style={styles.photoBox} onPress={choosePhoto}>
         {image ? (
           <Image source={{ uri: image.uri }} style={styles.photo} />
+        ) : catalogImageUrl ? (
+          <Image source={{ uri: catalogImageUrl }} style={styles.photo} />
         ) : (
           <View style={{ alignItems: 'center' }}>
             <Icon name="camera-outline" size={30} color={colors.textMuted} />

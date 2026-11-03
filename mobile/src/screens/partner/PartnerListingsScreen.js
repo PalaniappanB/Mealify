@@ -73,6 +73,8 @@ export default function PartnerListingsScreen({ navigation }) {
   const styles = StyleSheet.create({
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md },
     title: { ...typography.h1, color: colors.text },
+    menuLink: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    menuLinkText: { ...typography.bodyStrong, color: colors.primary },
     card: { marginBottom: spacing.sm },
     row: { flexDirection: 'row' },
     thumb: {
@@ -100,6 +102,10 @@ export default function PartnerListingsScreen({ navigation }) {
     <ScreenContainer style={{ flex: 1 }}>
       <View style={styles.header}>
         <Text style={styles.title}>{t('partnerDashboard.listings')}</Text>
+        <Pressable style={styles.menuLink} onPress={() => navigation.navigate('PartnerMenu')}>
+          <Icon name="restaurant-outline" size={16} color={colors.primary} />
+          <Text style={styles.menuLinkText}>{t('partnerDashboard.myMenu')}</Text>
+        </Pressable>
       </View>
       <Button title={t('partnerDashboard.addListing')} onPress={() => navigation.navigate('AddListing')} style={{ marginBottom: spacing.md }} />
       <FlatList
